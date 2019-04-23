@@ -1,0 +1,6 @@
+node_modules
+.floo
+.flooignore
+/.idea
+.idea
+*.log

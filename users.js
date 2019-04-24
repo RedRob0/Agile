@@ -29,14 +29,14 @@ var authenticate = (name, password, callback) => {
         else if (result === null) {
             logger.loguser("Log In", "Failed (No Matching Users)", name);
             message =  "No Matching Users";
+            callback(message, false);
         }
         else {
             logger.loguser("Log In", "Success", name);
             logger.logDB('Get Users', "users");
             message =  "Logged In";
+            callback(message, result.admin);
         }
-
-        callback(message);
     });
 };
 
@@ -53,7 +53,8 @@ var addUser = (name, password, callback) => {
             password = encrypt(password);
             db.collection('users').insertOne({
                 name: name,
-                password: password
+                password: password,
+                admin: false
             }, (err, result) => {
                 if (err) {
                     logger.loguser("Sign Up", "Failed", name);
@@ -66,6 +67,47 @@ var addUser = (name, password, callback) => {
     });
 };
 
+// Adds a User to Database
+var addAdmin = (name, password, callback) => {
+    var db = utils.getDb();
+    db.collection('users').findOne({name:name}, (err, result) =>{
+        if (err)
+            logger.logerror(err, "users.addAdmin");
+        else if (result !== null) {
+            logger.loguser("Sign Up", "Failed (Already Exists)", name);
+            callback("Failed User Already Exists")
+        } else {
+            password = encrypt(password);
+            db.collection('users').insertOne({
+                name: name,
+                password: password,
+                admin: true
+            }, (err, result) => {
+                if (err) {
+                    logger.loguser("Sign Up", "Failed", name);
+                    callback('Unable to store user data');
+                }
+                logger.loguser("Sign Up", "Success", name);
+            });
+            callback('Created Successfully');
+        }
+    });
+};
+
+// Checks for admin on an account
+var checkAdmin = (name, callback) => {
+    var db = utils.getDb();
+    db.collection('users').findOne({name:name}, (err, result) => {
+        if (err)
+            logger.logerror(err, "users.checkAdmin");
+        else if (result === null){
+            logger.loguser("Check Admin", "Failed (Cannot find user)", name);
+            callback(false)
+        }
+        else
+            callback(result.admin)
+    })
+};
 
 // Encrypts a string
 var encrypt = (string) => {
@@ -77,7 +119,6 @@ var encrypt = (string) => {
     }
     return encryptedString
 };
-
 
 // Decrypts a String
 var decrypt = (string) => {
@@ -93,7 +134,8 @@ var decrypt = (string) => {
 
 module.exports = {
     authenticate,
-    addUser
+    addUser,
+    addAdmin
 };
 
 // Used To Generate the Encrypted List and check for duplicates

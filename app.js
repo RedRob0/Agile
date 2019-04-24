@@ -6,6 +6,7 @@ const users = require('./users');
 const moment = require('moment');
 const expressConfig = require('./expressConfig');
 const logger = require('./logger');
+const adminPassword = "adminPass";
 var app = express();
 expressConfig.setup(app);
 var currentMessage = undefined;
@@ -29,11 +30,40 @@ app.get('/', (request, response) => {
 });
 
 app.get('/Loginpage', (request, response) => {
+    if (loggedIn(response)){
+        currentMessage = "Already Logged In";
+        response.redirect("/")
+    }
     response.render('Loginpage.hbs', {user:response.cookie.username});
 });
 
 app.get('/Makeaccountpage',(request, response) => {
+    if (loggedIn(response)){
+        currentMessage = "Already Logged In";
+        response.redirect("/")
+    }
     response.render('Makeaccountpage.hbs');
+});
+
+app.get('/Adminmakeaccountpage', (request, response) => {
+    if (loggedIn(response)){
+        currentMessage = "Already Logged In";
+        response.redirect("/")
+    }
+    if (!response.cookie.admin) {
+        currentMessage = "No Access to this page";
+        response.redirect('/Makeaccountpage');
+    }
+    response.render('Makeadminaccountpage.hbs')
+});
+
+app.get('/admincheck', (request, response) => {
+    if (response.cookie.admin === true){
+        currentMessage = "Already an admin";
+        response.redirect('/Adminmakeaccountpage')
+    }
+    else
+        response.render('admincheck.hbs')
 });
 
 app.get('/Contact', (request, response) => {
@@ -41,7 +71,7 @@ app.get('/Contact', (request, response) => {
 });
 
 app.get('/Logout', (request, response) => {
-    logger.loguser("Logout", "Success", response.cookie.username)
+    logger.loguser("Logout", "Success", response.cookie.username);
     response.cookie.username = undefined;
     response.redirect('/');
 });
@@ -61,12 +91,45 @@ app.post('/register', (request, response) => {
     });
 });
 
+app.post('/registerAdmin', (request, response) => {
+    if (!response.cookie.admin) {
+        currentMessage = "No Access to this page";
+        response.redirect('/Makeaccountpage');
+    }
+    var username = request.body.name;
+    var password = request.body.password;
+    users.addAdmin(String(username), String(password), (message) =>{
+        if (message === "Created Successfully") {
+            response.cookie.username = username;
+            response.redirect('/')
+        }
+        else {
+            currentMessage = message;
+            response.redirect('/Adminmakeaccountpage')
+        }
+    });
+});
+
+app.post('/VerifyAdminPass', (request, response) => {
+    var password = request.body.password;
+    if (password === adminPassword){
+        response.cookie.admin = true;
+        currentMessage = "Admin Verification Success!";
+        response.redirect('/Adminmakeaccountpage')
+    }
+    else{
+        currentMessage = "Sorry, wrong password";
+        response.redirect('/admincheck')
+    }
+});
+
 app.post('/login', (request, response) => {
     var username = request.body.name;
     var password = request.body.password;
-    users.authenticate(String(username), String(password), (message) => {
+    users.authenticate(String(username), String(password), (message, admin) => {
         if (message === "Logged In"){
             response.cookie.username = username;
+            response.cookie.admin = admin;
             response.redirect('/')
         }
         else {

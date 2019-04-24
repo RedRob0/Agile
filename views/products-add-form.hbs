@@ -11,6 +11,7 @@
 </head>
 <body>
     {{>header}}
+    <br>
         <div class="container" style="justify-content: space-between;flex-direction: column;display: flex;">
             <h1>Add Product</h1>
             <form method="post" action="/products">
@@ -18,6 +19,9 @@
                     <div class="form-group col-12">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" name="name" id="name" placeholder="Name" required>
+                        <br>
+                        <label for="price">Unit Price</label>
+                        <input type="text" class="form-control" name="price" id="price" placeholder="Price" required>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-success">Submit</button>

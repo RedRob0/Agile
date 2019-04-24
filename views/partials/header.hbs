@@ -15,9 +15,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/sales">Sales</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logs">Logs</a>
-                        </li>
+                        {{#if admin}}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logs">Logs</a>
+                            </li>
+                        {{/if}}
                         <li class="nav-item">
                             <a class="nav-link" href="/Contact">Contact</a>
                         </li>
@@ -29,7 +31,10 @@
                                   </a>
                                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="/Logout">Logout</a>
-                                    <a class="dropdown-item" href="#">Cart</a>
+                                      {{#if admin}}
+                                      {{else}}
+                                            <a class="dropdown-item" href="/ShoppingCart">Cart {{#if cart}}({{length cart}}){{/if}}</a>
+                                      {{/if}}
                                   </div>
                                 </div>
                             </li>
@@ -42,7 +47,7 @@
               </div>
 </nav>
 <script>
-    if ("{{isMessage}}" === "true")
-        alert("{{getMessage}}");
-    console.log("{{clearMessage}}")
+    {{#if currentMessage}}
+        alert("{{currentMessage}}");
+    {{/if}}
 </script>

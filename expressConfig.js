@@ -1,12 +1,12 @@
 const express = require('express');
 const logger = require('./logger');
 const session = require('express-session');
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 var setup = (app) => {
-    app.use(methodOverride('_method'))
+    app.use(methodOverride('_method'));
     app.use(cookieParser());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({

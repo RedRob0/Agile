@@ -12,12 +12,12 @@
     <body>
         {{>header}}
             <div class="container">
-                <h1>Make Your Account</h1>
+                <h1>Verify Admin Access</h1>
                 <form method="post" action="/VerifyAdminPass">
                     <div class="form-row">
                         <div class="form-group col-12">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" name="password" placeholder="Password" required>
+                            <label for="password">Verification Password</label>
+                            <input type="password" class="form-control" name="password" placeholder="Password" id="password" required>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-success">Submit</button>

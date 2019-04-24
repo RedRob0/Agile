@@ -8,15 +8,21 @@ const expressConfig = require('./expressConfig');
 const logger = require('./logger');
 const adminPassword = "adminPass";
 var app = express();
+
 expressConfig.setup(app);
+
 var currentMessage = undefined;
+
 hbs.registerPartials(__dirname + '/views/partials');
+
 hbs.registerHelper('isMessage', () => {
     return currentMessage !== undefined;
 });
+
 var loggedIn = (response) => {
     return response.cookie.username !== undefined;
 };
+
 hbs.registerHelper('getMessage', () => {
     return currentMessage;
 });
@@ -73,6 +79,7 @@ app.get('/Contact', (request, response) => {
 app.get('/Logout', (request, response) => {
     logger.loguser("Logout", "Success", response.cookie.username);
     response.cookie.username = undefined;
+    response.cookie.admin = false;
     response.redirect('/');
 });
 

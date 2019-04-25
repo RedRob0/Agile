@@ -135,7 +135,6 @@ app.post('/Checkout', (request, response) => {
     }
 });
 
-
 app.get('/Logout', (request, response) => {
     logger.loguser("Logout", "Success", response.cookie.username);
     response.cookie.username = undefined;
@@ -249,6 +248,7 @@ app.get('/server.log', (request, response) => {
         response.redirect('/Loginpage');
     }
 });
+
 app.get('/database.log', (request, response) => {
     if (loggedIn(response)){
         response.download(__dirname+"/database.log")
@@ -257,6 +257,7 @@ app.get('/database.log', (request, response) => {
         response.redirect('/Loginpage');
     }
 });
+
 app.get('/users.log', (request, response) => {
     if (loggedIn(response)){
         response.download(__dirname+"/users.log")
@@ -265,6 +266,7 @@ app.get('/users.log', (request, response) => {
         response.redirect('/Loginpage');
     }
 });
+
 app.get('/errors.log', (request, response) => {
     if (loggedIn(response)){
         response.download(__dirname+"/errors.log")
@@ -273,6 +275,7 @@ app.get('/errors.log', (request, response) => {
         response.redirect('/Loginpage');
     }
 });
+
 app.get('/sales', (request, response) => {
     if (loggedIn(response)){
         var db = utils.getDb();
@@ -286,7 +289,7 @@ app.get('/sales', (request, response) => {
             if (response.cookie.admin)
                 response.render('sales.hbs', {sales:result, user:response.cookie.username, admin: response.cookie.admin, currentMessage:response.cookie.currentMessage, cart:response.cookie.cart});
             else{
-                var filtered =[]
+                var filtered =[];
                 for (var i in result){
                     if (result[i].user === response.cookie.username)
                         filtered.push(result[i])

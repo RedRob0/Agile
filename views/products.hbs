@@ -9,7 +9,7 @@
 
     <title>BAD Donuts</title>
 </head>
-<body>
+<body class="d-flex flex-column">
     {{>header}}
     <br>
     {{#if admin}}
@@ -27,7 +27,7 @@
                     {{#each products}}
                         <tr>
                             <td>{{this.name}}</td>
-                            <td>{{this.price}}</td>
+                            <td>${{this.price}}</td>
                             <td>{{this.created_date_time}}</td>
                             <td>{{this.update_date_time}}</td>
                             <td><form method="post" action="/products/{{this._id}}?_method=DELETE"><a class="btn btn-primary" href="/products-edit-form/{{this._id}}">Edit</a> <button type="submit" class="btn btn-danger">Delete</button></form></td>
@@ -57,7 +57,7 @@
                         <form method="post" action="/addCart/{{this._id}}">
                         <tr>
                             <td>{{this.name}}</td>
-                            <td>{{this.price}}</td>
+                            <td>${{this.price}}</td>
                             <td><div class="form-group"><input min="0" type="number" id="quantity" name="quantity" class="form-control col-2" required></div></td>
                             <td><button type="submit" class="btn btn-primary">Add to Cart</button></td>
                         </tr>

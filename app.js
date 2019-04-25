@@ -87,6 +87,20 @@ app.get('/ShoppingCart', (request, response) => {
     }
 });
 
+app.post('/deleteCart/:id', (request, response) => {
+    var id = request.params.id;
+    for (var i in response.cookie.cart){
+        if (id === response.cookie.cart[i].id) {
+            response.cookie.cart.pop(i);
+            response.cookie.currentMessage = "Deleted Successfully";
+            response.redirect('/ShoppingCart');
+            return;
+        }
+    }
+    response.cookie.currentMessage = "Failed";
+    response.cookie.redirect('/ShoppingCart')
+});
+
 app.post('/Checkout', (request, response) => {
     if (loggedIn(response)){
         for (var i in response.cookie.cart) {

@@ -9,7 +9,7 @@
 
     <title>BAD Donuts</title>
 </head>
-<body>
+<body class="d-flex flex-column" style="width: 100%">
     {{>header}}
     <br>
     {{#if admin}}
@@ -46,8 +46,9 @@
                     </tr>
                 {{/if}}
             </table>
-
-            <a class="btn btn-success" href="/sales-add-form">Add sale</a>
+            <div class="container text-right">
+                <a class="btn btn-success" href="/sales-add-form">Add sale</a>
+            </div>
         </div>
     {{else}}
         <div class="container">

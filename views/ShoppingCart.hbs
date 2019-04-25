@@ -9,7 +9,7 @@
 
         <title>BAD Donuts</title>
     </head>
-    <body>
+    <body class="d-flex flex-column">
     {{>header}}
     <br>
     <div class="container">
@@ -24,13 +24,15 @@
             </tr>
             {{#if cart}}
                 {{#each cart}}
+                    <form method="post" action="/deleteCart/{{this.id}}">
                         <tr>
                         <td>{{this.name}}</td>
-                        <td>{{this.price}}</td>
+                        <td>${{this.price}}</td>
                         <td>{{this.quantity}}</td>
-                        <td>{{multiply this.price this.quantity}}</td>
-                        <td><button type="submit" class="btn btn-primary">Delete</button></td>
+                        <td>${{multiply this.price this.quantity}}</td>
+                        <td><button type="submit" class="btn btn-danger">Delete</button></td>
                         </tr>
+                    </form>
                 {{/each}}
             {{else}}
                 <tr>
